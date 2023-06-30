@@ -7,9 +7,11 @@ import com.example.composespotify.core.util.Constants
 import com.example.composespotify.features.data.repository.AuthRepositoryImpl
 import com.example.composespotify.features.data.repository.DetailRepositoryImpl
 import com.example.composespotify.features.data.repository.HomeRepositoryImpl
+import com.example.composespotify.features.data.repository.SearchRepositoryImpl
 import com.example.composespotify.features.domain.repository.AuthRepository
 import com.example.composespotify.features.domain.repository.DetailRepository
 import com.example.composespotify.features.domain.repository.HomeRepository
+import com.example.composespotify.features.domain.repository.SearchRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -67,4 +69,10 @@ class AppModule {
     fun provideDetailRepository(
         apiService: ApiService
     ): DetailRepository = DetailRepositoryImpl(apiService)
+
+    @Provides
+    @Singleton
+    fun provideSearchRepository(
+        apiService: ApiService
+    ): SearchRepository = SearchRepositoryImpl(apiService)
 }

@@ -11,9 +11,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,9 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.composespotify.R
+import com.example.composespotify.core.component.SnackBarComponent
 import com.example.composespotify.core.util.Config
 import com.example.composespotify.features.presentation.component.ImageComponent
 import com.example.composespotify.features.presentation.viewmodel.DetailViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +37,22 @@ fun DetailScreen(
     val isPlaylist = type == "Playlist"
     val isAlbum = type == "Album"
 
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = state.gettingAlbumErr, key2 = state.gettingPlaylistErr) {
+        if (state.gettingAlbumErr.isNotEmpty()) {
+            scope.launch {
+                snackBarHostState.showSnackbar(message = state.gettingAlbumErr)
+            }
+        }
+        if (state.gettingPlaylistErr.isNotEmpty()) {
+            scope.launch {
+                snackBarHostState.showSnackbar(message = state.gettingPlaylistErr)
+            }
+        }
+    }
+
     LaunchedEffect(key1 = Unit) {
         if (isAlbum) {
             detailViewModel.fetchAlbum(id)
@@ -46,6 +62,7 @@ fun DetailScreen(
     }
 
     Scaffold(
+        snackbarHost = { SnackBarComponent(hostState = snackBarHostState, isError = true) },
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -113,7 +130,7 @@ fun DetailScreen(
                             }
                         }
                         Text(
-                            text = if (isAlbum) "Album . 2020" else "7,290,659 saves . 3h 59m",
+                            text = if (isAlbum) "Album • 2020" else "7,290,659 saves • 3h 59m",
                             style = MaterialTheme.typography.bodySmall
                         )
                         Row(

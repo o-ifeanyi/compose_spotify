@@ -56,7 +56,7 @@ fun CategoryComponent(title: String, data: List<HomeFeedData>, onClick: (HomeFee
                              color = MaterialTheme.colorScheme.onSurface.copy(0.6f)
                          )
                          Text(
-                             text = "Album . ${item.subtitle}",
+                             text = "Album • ${item.subtitle}",
                              maxLines = 1,
                              style = MaterialTheme.typography.bodyMedium,
                              overflow = TextOverflow.Ellipsis,

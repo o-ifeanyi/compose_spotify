@@ -18,6 +18,7 @@ import coil.compose.rememberAsyncImagePainter
 
 @Composable
 fun ImageComponent(
+    modifier: Modifier = Modifier,
     url: String,
     height: Dp = 180.dp,
     width: Dp = 180.dp,
@@ -25,7 +26,7 @@ fun ImageComponent(
     shape: Shape? = null
 ) {
     Image(
-        modifier = Modifier
+        modifier = modifier
             .height(height)
             .width(width)
             .background(

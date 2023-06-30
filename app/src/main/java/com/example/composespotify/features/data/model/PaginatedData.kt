@@ -6,17 +6,17 @@ import com.example.composespotify.features.domain.entity.HomeFeedData
 import com.example.composespotify.features.domain.entity.HomeFeedEntity
 
 data class PaginatedData<T>(
-    val items: List<T>,
-    val href: String,
-    val next: String,
-    val previous: String,
-    val offset: Int,
-    val limit: Int,
-    val total: Int
+    val items: List<T>?,
+    val href: String?,
+    val next: String?,
+    val previous: String?,
+    val offset: Int?,
+    val limit: Int?,
+    val total: Int?
 )
 
 fun PaginatedData<PlaylistModel>.toFeaturedPlaylist(): HomeFeedEntity {
-    val data: List<PlaylistModel> = items
+    val data: List<PlaylistModel> = items ?: emptyList()
     val homeFeedData = data.map {
         try {
             HomeFeedData(
@@ -39,7 +39,7 @@ fun PaginatedData<PlaylistModel>.toFeaturedPlaylist(): HomeFeedEntity {
 }
 
 fun PaginatedData<NewReleasesModel>.toNewReleases(): HomeFeedEntity {
-    val data: List<NewReleasesModel> = items
+    val data: List<NewReleasesModel> = items ?: emptyList()
     val homeFeedData = data.map {
         try {
             HomeFeedData(

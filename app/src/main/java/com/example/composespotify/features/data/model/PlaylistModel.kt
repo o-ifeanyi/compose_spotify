@@ -3,6 +3,8 @@ package com.example.composespotify.features.data.model
 import android.util.Log
 import com.example.composespotify.features.domain.entity.DetailEntity
 import com.example.composespotify.features.domain.entity.DetailTrackData
+import com.example.composespotify.features.domain.entity.FeedType
+import com.example.composespotify.features.domain.entity.HomeFeedData
 import com.google.gson.annotations.SerializedName
 
 data class PlaylistModel(
@@ -25,7 +27,7 @@ data class PlaylistModel(
 
 fun PlaylistModel.toDetailEntity(): DetailEntity {
     val trackData = tracks?.let { tracks ->
-        tracks.items.map { it ->
+        tracks.items?.map { it ->
             try {
                 DetailTrackData(
                     id = it.track.id,
@@ -54,4 +56,19 @@ fun PlaylistModel.toDetailEntity(): DetailEntity {
         duration = "${time}",
         tracks = trackData.filterNotNull()
     )
+}
+
+fun PlaylistModel.toCategoryPlaylist(): HomeFeedData? {
+    return try {
+        HomeFeedData(
+            id = id,
+            type = FeedType.Playlist,
+            url = images.first().url,
+            header = description,
+            subtitle = ""
+        )
+    } catch (e: Exception) {
+        Log.d("toFeaturedPlaylist failure", e.toString())
+        null
+    }
 }

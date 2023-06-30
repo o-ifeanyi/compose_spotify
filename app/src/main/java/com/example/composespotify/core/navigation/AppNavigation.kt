@@ -19,13 +19,19 @@ fun AppNavigation(controller: NavHostController) {
             SearchScreen(controller = controller)
         }
         composable(AppScreens.SubscriptionScreen.name) {
-            SubscriptionScreen(controller = controller)
+            SubscriptionScreen()
         }
         val detailRoute = "${AppScreens.DetailScreen.name}/{id}/{type}"
         composable(detailRoute) {
             val id = it.arguments?.getString("id")
             val type = it.arguments?.getString("type")
             DetailScreen(id = id ?: "", type = type ?: "")
+        }
+        val categoryPlaylistRoute = "${AppScreens.CategoryPlaylistScreen.name}/{id}/{title}"
+        composable(categoryPlaylistRoute) {
+            val id = it.arguments?.getString("id")
+            val title = it.arguments?.getString("title")
+            CategoryPlaylistScreen(controller = controller, id = id ?: "", title = title ?: "")
         }
     }
 }

@@ -33,7 +33,7 @@ data class AlbumModel(
 
 fun AlbumModel.toDetailEntity(): DetailEntity {
     val trackData = tracks?.let {
-        it.items.map { track ->
+        it.items?.map { track ->
             try {
                 DetailTrackData(
                     id = track.id,

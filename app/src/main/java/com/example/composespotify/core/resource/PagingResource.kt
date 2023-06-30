@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.example.composespotify.features.data.model.PaginatedData
 
 class PagingResource<T: Any>(
-    private val onLoad: suspend (offset: Int, limit: Int) -> PaginatedData<T>?,
+    private val onLoad: suspend (offset: Int) -> PaginatedData<T>?,
 ): PagingSource<Int, T>() {
     override fun getRefreshKey(state: PagingState<Int, T>): Int? {
         return state.anchorPosition?.let { position ->
@@ -16,15 +16,14 @@ class PagingResource<T: Any>(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
         return try {
-            val page = params.key ?: 1
-            val res = onLoad(page, params.loadSize)
-
+            val key = params.key ?: 0
+            val res = onLoad(key)
             if (res == null) {
                 LoadResult.Error(Exception())
             } else {
                 LoadResult.Page(
-                    data = res.items,
-                    nextKey = if (res.total == page) null else page + 1,
+                    data = res.items ?: emptyList(),
+                    nextKey = if (res.next == null) null else key + params.loadSize,
                     prevKey = null,
                 )
             }

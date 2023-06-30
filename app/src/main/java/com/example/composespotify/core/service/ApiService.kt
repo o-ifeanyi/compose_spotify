@@ -5,6 +5,7 @@ import com.example.composespotify.features.data.response.FeaturedPlaylistRespons
 import com.example.composespotify.core.resource.Endpoints
 import com.example.composespotify.features.data.model.AlbumModel
 import com.example.composespotify.features.data.model.PlaylistModel
+import com.example.composespotify.features.data.response.CategoryResponse
 import com.example.composespotify.features.data.response.NewReleaseResponse
 import com.example.composespotify.features.data.response.RecommendationResponse
 import retrofit2.http.Field
@@ -22,7 +23,6 @@ interface ApiService {
         @Header(value = "isTokenRequest") header: String = "true",
         @Field("grant_type") grantType: String = "client_credentials"
     ): CredentialModel
-
     @GET(value = Endpoints.recommendations)
     suspend fun getRecommendations(
         @Query(value = "limit") limit: Int,
@@ -30,22 +30,29 @@ interface ApiService {
         @Query(value = "seed_genres") seedGenres: String,
         @Query(value = "seed_tracks") seedTracks: String
     ): RecommendationResponse
-
     @GET(value = Endpoints.featuredPlaylist)
     suspend fun getFeaturedPlaylist(
         @Query(value = "offset") offset: Int,
         @Query(value = "limit") limit: Int
     ): FeaturedPlaylistResponse
-
     @GET(value = Endpoints.newReleases)
     suspend fun getNewReleases(
         @Query(value = "offset") offset: Int,
         @Query(value = "limit") limit: Int
     ): NewReleaseResponse
-
     @GET(value = Endpoints.album)
     suspend fun getAlbum(@Path(value = "id") id: String): AlbumModel
-
     @GET(value = Endpoints.playlist)
     suspend fun getPlaylist(@Path(value = "id") id: String): PlaylistModel
+    @GET(value = Endpoints.categories)
+    suspend fun getCategories(
+        @Query(value = "offset") offset: Int,
+        @Query(value = "limit") limit: Int
+    ): CategoryResponse
+    @GET(value = Endpoints.categoryPlaylist)
+    suspend fun getCategoryPlaylist(
+        @Path(value = "id") id: String,
+        @Query(value = "offset") offset: Int,
+        @Query(value = "limit") limit: Int
+    ): FeaturedPlaylistResponse
 }
