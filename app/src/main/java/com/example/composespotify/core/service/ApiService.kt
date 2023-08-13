@@ -1,13 +1,10 @@
 package com.example.composespotify.core.service
 
 import com.example.composespotify.features.data.model.CredentialModel
-import com.example.composespotify.features.data.response.FeaturedPlaylistResponse
 import com.example.composespotify.core.resource.Endpoints
 import com.example.composespotify.features.data.model.AlbumModel
 import com.example.composespotify.features.data.model.PlaylistModel
-import com.example.composespotify.features.data.response.CategoryResponse
-import com.example.composespotify.features.data.response.NewReleaseResponse
-import com.example.composespotify.features.data.response.RecommendationResponse
+import com.example.composespotify.features.data.response.*
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -55,4 +52,11 @@ interface ApiService {
         @Query(value = "offset") offset: Int,
         @Query(value = "limit") limit: Int
     ): FeaturedPlaylistResponse
+    @GET(value = Endpoints.search)
+    suspend fun search(
+        @Query(value = "q") query: String,
+        @Query(value = "type") type: String,
+        @Query(value = "offset") offset: Int,
+        @Query(value = "limit") limit: Int
+    ): SearchResponse
 }

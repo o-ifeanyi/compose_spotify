@@ -12,8 +12,6 @@ import androidx.compose.material.icons.outlined.CameraAlt
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
@@ -40,9 +38,7 @@ fun SearchScreen(
     searchViewModel: SearchViewModel = hiltViewModel()
 ) {
     val categories = searchViewModel.categories.collectAsLazyPagingItems()
-    val search = remember {
-        mutableStateOf("")
-    }
+
     Scaffold {
         Column(
             modifier = Modifier.padding(
@@ -64,10 +60,11 @@ fun SearchScreen(
             }
 
             InputField(
-                input = search,
+                input = searchViewModel.searchText,
                 label = "What do you want to listen to?",
                 leadingIcon = Icons.Outlined.Search,
-                background = MaterialTheme.colorScheme.onBackground
+                background = MaterialTheme.colorScheme.onBackground,
+                onValueChange = {}
             )
 
             Text(
@@ -86,7 +83,10 @@ fun SearchScreen(
                         Box(
                             modifier = Modifier
                                 .height(100.dp)
-                                .background(color = randomColor(), shape = MaterialTheme.shapes.small)
+                                .background(
+                                    color = randomColor(),
+                                    shape = MaterialTheme.shapes.small
+                                )
                                 .clipToBounds()
                                 .clickable {
                                     controller.navigate(AppScreens.CategoryPlaylistScreen.name + "/${it.id}/${it.name}")

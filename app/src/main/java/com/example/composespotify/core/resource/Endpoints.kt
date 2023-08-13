@@ -9,4 +9,5 @@ object Endpoints {
     const val featuredPlaylist = "v1/browse/featured-playlists"
     const val categories = "v1/browse/categories"
     const val categoryPlaylist = "v1/browse/categories/{id}/playlists"
+    const val search = "v1/search"
 }

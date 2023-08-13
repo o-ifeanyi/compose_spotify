@@ -1,10 +1,12 @@
 package com.example.composespotify.features.data.repository
 
 import android.util.Log
+import com.example.composespotify.core.resource.Resource
 import com.example.composespotify.core.service.ApiService
 import com.example.composespotify.features.data.model.CategoryIconModel
 import com.example.composespotify.features.data.model.PaginatedData
 import com.example.composespotify.features.data.model.PlaylistModel
+import com.example.composespotify.features.data.response.SearchResponse
 import com.example.composespotify.features.domain.repository.SearchRepository
 import javax.inject.Inject
 
@@ -30,6 +32,21 @@ class SearchRepositoryImpl @Inject constructor(private val apiService: ApiServic
         } catch (e: Exception) {
             Log.d("getCategoryPlaylist failure", e.stackTraceToString())
             null
+        }
+    }
+
+    override suspend fun search(
+        query: String,
+        type: String,
+        offset: Int,
+        limit: Int
+    ): Resource<SearchResponse> {
+        return try {
+            val res = apiService.search(query, type, offset, limit)
+            Resource.Success(res)
+        } catch (e: Exception) {
+            Log.d("search failure", e.stackTraceToString())
+            Resource.Error(message = e.message ?: "Something went wrong")
         }
     }
 }
