@@ -2,7 +2,7 @@ package com.example.composespotify.core.resource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.composespotify.features.data.model.PaginatedData
+import com.example.composespotify.app.data.model.PaginatedData
 
 class PagingResource<T: Any>(
     private val onLoad: suspend (offset: Int) -> PaginatedData<T>?,

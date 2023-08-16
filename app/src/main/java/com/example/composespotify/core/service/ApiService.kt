@@ -1,10 +1,10 @@
 package com.example.composespotify.core.service
 
-import com.example.composespotify.features.data.model.CredentialModel
+import com.example.composespotify.app.data.model.CredentialModel
 import com.example.composespotify.core.resource.Endpoints
-import com.example.composespotify.features.data.model.AlbumModel
-import com.example.composespotify.features.data.model.PlaylistModel
-import com.example.composespotify.features.data.response.*
+import com.example.composespotify.app.data.model.AlbumModel
+import com.example.composespotify.app.data.model.PlaylistModel
+import com.example.composespotify.app.data.response.*
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
