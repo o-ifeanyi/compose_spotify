@@ -34,9 +34,10 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
         viewModelScope.launch {
             searchText.asStateFlow().debounce(1000).collect { query ->
                 Log.d("SEARCH QUERY", query)
+                if (query.isEmpty()) return@collect
                 _searchState.update { it.copy(searching = true, searchingErr = "") }
                 viewModelScope.launch {
-                    when(val res = searchRepository.search(query, "", 0, 20)) {
+                    when(val res = searchRepository.search(query, 0, 20)) {
                         is Resource.Success -> {
                             _searchState.update { it.copy() }
                         }

@@ -11,5 +11,5 @@ interface SearchRepository {
 
     suspend fun getCategoryPlaylist(id: String, offset: Int, limit: Int): PaginatedData<PlaylistModel>?
 
-    suspend fun search(query: String, type: String, offset: Int, limit: Int) : Resource<SearchResponse>
+    suspend fun search(query: String, offset: Int, limit: Int) : Resource<SearchResponse>
 }

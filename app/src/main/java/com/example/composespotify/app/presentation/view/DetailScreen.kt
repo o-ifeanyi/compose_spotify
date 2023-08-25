@@ -22,6 +22,7 @@ import com.example.composespotify.R
 import com.example.composespotify.core.component.SnackBarComponent
 import com.example.composespotify.core.util.Config
 import com.example.composespotify.app.presentation.component.ImageComponent
+import com.example.composespotify.app.presentation.component.TrackComponent
 import com.example.composespotify.app.presentation.viewmodel.DetailViewModel
 import kotlinx.coroutines.launch
 
@@ -174,29 +175,14 @@ fun DetailScreen(
                 }
 
                 items(detailEntity.tracks) { item ->
-                    Row(
-                        modifier = Modifier.height(70.dp),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        if (isPlaylist) {
-                            ImageComponent(url = item.url, width = 70.dp, height = 70.dp)
-                        }
-                        Column(
-                            verticalArrangement = Arrangement.spacedBy(5.dp),
-                            horizontalAlignment = Alignment.Start
-                        ) {
-                            Text(text = item.title, fontWeight = FontWeight.SemiBold, maxLines = 1)
-                            Text(text = item.artist, maxLines = 1)
-                        }
-                        Spacer(modifier = Modifier.weight(1f))
-                        Icon(
-                            imageVector = Icons.Outlined.MoreHoriz,
-                            contentDescription = "More"
-                        )
-                    }
+                    TrackComponent(
+                        title = item.title,
+                        subtitle = item.artist,
+                        imageUrl = item.url
+                    )
                 }
             }
         }
     }
 }
+

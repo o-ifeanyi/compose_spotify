@@ -27,7 +27,7 @@ data class PlaylistModel(
 
 fun PlaylistModel.toDetailEntity(): DetailEntity {
     val trackData = tracks?.let { tracks ->
-        tracks.items?.map { it ->
+        tracks.items?.map {
             try {
                 DetailTrackData(
                     id = it.track.id,
@@ -53,7 +53,7 @@ fun PlaylistModel.toDetailEntity(): DetailEntity {
         url = images.first().url,
         name = name,
         description = description,
-        duration = "${time}",
+        duration = "$time",
         tracks = trackData.filterNotNull()
     )
 }

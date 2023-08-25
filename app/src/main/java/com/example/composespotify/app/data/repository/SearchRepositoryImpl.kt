@@ -37,12 +37,12 @@ class SearchRepositoryImpl @Inject constructor(private val apiService: ApiServic
 
     override suspend fun search(
         query: String,
-        type: String,
         offset: Int,
         limit: Int
     ): Resource<SearchResponse> {
         return try {
-            val res = apiService.search(query, type, offset, limit)
+            val res = apiService.search(query, "artist,playlist,album,track", offset, limit)
+            Log.d("search success", res.toString())
             Resource.Success(res)
         } catch (e: Exception) {
             Log.d("search failure", e.stackTraceToString())

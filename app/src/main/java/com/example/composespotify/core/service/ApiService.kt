@@ -54,7 +54,7 @@ interface ApiService {
     ): FeaturedPlaylistResponse
     @GET(value = Endpoints.search)
     suspend fun search(
-        @Query(value = "q") query: String,
+        @Query(value = "q") q: String,
         @Query(value = "type") type: String,
         @Query(value = "offset") offset: Int,
         @Query(value = "limit") limit: Int

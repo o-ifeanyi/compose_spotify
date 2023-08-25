@@ -57,7 +57,10 @@ fun InputField(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             focusedContainerColor = background,
-            unfocusedContainerColor = background
+            unfocusedContainerColor = background,
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
+            disabledTextColor = Color.Gray,
         )
     )
 }
