@@ -54,7 +54,7 @@ fun SearchScreen(
 
             Box(contentAlignment = Alignment.Center) {
                 if (searchText.isNotEmpty()) {
-                    SearchResultComponent()
+                    SearchResultComponent(controller)
                 } else {
                     SearchCategoryComponent(controller)
                 }

@@ -177,7 +177,7 @@ fun DetailScreen(
                 items(detailEntity.tracks) { item ->
                     TrackComponent(
                         title = item.title,
-                        subtitle = item.artist,
+                        subtitle = item.subtitle,
                         imageUrl = item.url
                     )
                 }

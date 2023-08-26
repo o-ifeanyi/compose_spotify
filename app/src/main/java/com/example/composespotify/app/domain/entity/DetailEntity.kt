@@ -6,13 +6,13 @@ data class DetailEntity(
     val name: String,
     val description: String,
     val duration: String,
-    val tracks: List<DetailTrackData>
+    val tracks: List<TrackDataEntity>
 )
 
-data class DetailTrackData(
+data class TrackDataEntity(
     val id: String,
     val url: String,
     val title: String,
-    val artist: String,
+    val subtitle: String,
     val previewUrl: String,
 )

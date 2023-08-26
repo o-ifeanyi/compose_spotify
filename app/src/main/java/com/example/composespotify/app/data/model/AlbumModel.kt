@@ -2,7 +2,7 @@ package com.example.composespotify.app.data.model
 
 import android.util.Log
 import com.example.composespotify.app.domain.entity.DetailEntity
-import com.example.composespotify.app.domain.entity.DetailTrackData
+import com.example.composespotify.app.domain.entity.TrackDataEntity
 import com.google.gson.annotations.SerializedName
 
 data class AlbumModel(
@@ -35,11 +35,11 @@ fun AlbumModel.toDetailEntity(): DetailEntity {
     val trackData = tracks?.let {
         it.items?.map { track ->
             try {
-                DetailTrackData(
+                TrackDataEntity(
                     id = track.id,
                     url = "",
                     title = track.name,
-                    artist = track.artists.first().name,
+                    subtitle = track.artists.first().name,
                     previewUrl = track.previewUrl ?: ""
                 )
             } catch (e: Exception) {

@@ -10,6 +10,8 @@ import androidx.paging.cachedIn
 import com.example.composespotify.core.resource.PagingResource
 import com.example.composespotify.core.resource.Resource
 import com.example.composespotify.app.data.model.PlaylistModel
+import com.example.composespotify.app.data.response.toSearchEntity
+import com.example.composespotify.app.domain.entity.SearchEntity
 import com.example.composespotify.app.domain.repository.SearchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -18,8 +20,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SearchState(
-    val searching: Boolean = false,
-    val searchingErr: String = ""
+    val searching: Boolean = true,
+    val searchingErr: String = "",
+    val searchEntity: SearchEntity? = null
 )
 
 @OptIn(FlowPreview::class)
@@ -39,7 +42,7 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
                 viewModelScope.launch {
                     when(val res = searchRepository.search(query, 0, 20)) {
                         is Resource.Success -> {
-                            _searchState.update { it.copy() }
+                            _searchState.update { it.copy(searchEntity = res.data?.toSearchEntity()) }
                         }
                         is Resource.Error -> {
                             _searchState.update { it.copy(searchingErr = res.message!!) }
