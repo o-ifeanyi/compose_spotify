@@ -24,6 +24,7 @@ import com.example.composespotify.core.util.Config
 import com.example.composespotify.app.presentation.component.ImageComponent
 import com.example.composespotify.app.presentation.component.TrackComponent
 import com.example.composespotify.app.presentation.viewmodel.DetailViewModel
+import com.example.composespotify.app.presentation.viewmodel.PlayerViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +33,8 @@ fun DetailScreen(
     id: String,
     type: String,
     config: Config = Config(),
-    detailViewModel: DetailViewModel = hiltViewModel()
+    detailViewModel: DetailViewModel = hiltViewModel(),
+    playerViewModel: PlayerViewModel = PlayerViewModel,
 ) {
     val state = detailViewModel.detailState.collectAsState().value
     val isPlaylist = type == "Playlist"
@@ -179,7 +181,10 @@ fun DetailScreen(
                         title = item.title,
                         subtitle = item.subtitle,
                         imageUrl = item.url
-                    )
+                    ) {
+                        playerViewModel.setQueue(detailEntity.tracks)
+                        playerViewModel.play(item)
+                    }
                 }
             }
         }

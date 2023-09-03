@@ -2,6 +2,8 @@ package com.example.composespotify.app.data.response
 
 import android.util.Log
 import com.example.composespotify.app.data.model.*
+import com.example.composespotify.app.domain.entity.FeedType
+import com.example.composespotify.app.domain.entity.HomeFeedData
 import com.example.composespotify.app.domain.entity.SearchEntity
 import com.example.composespotify.app.domain.entity.TrackDataEntity
 
@@ -28,29 +30,14 @@ fun SearchResponse.toSearchEntity(): SearchEntity {
         }
     } ?: emptyList()
 
-    val artists = artists.items?.map { artist ->
-        try {
-            TrackDataEntity(
-                id = artist.id,
-                url = artist.images.first().url,
-                title = artist.name,
-                subtitle = "",
-                previewUrl = ""
-            )
-        } catch (e: Exception) {
-            Log.d("toSearchEntity artist failure", e.toString())
-            null
-        }
-    } ?: emptyList()
-
     val albums = albums.items?.map { album ->
         try {
-            TrackDataEntity(
+            HomeFeedData(
                 id = album.id,
+                type = FeedType.Album,
                 url = album.images.first().url,
-                title = album.name,
+                header = album.name,
                 subtitle = album.artists.first().name,
-                previewUrl = ""
             )
         } catch (e: Exception) {
             Log.d("toSearchEntity album failure", e.toString())
@@ -60,12 +47,12 @@ fun SearchResponse.toSearchEntity(): SearchEntity {
 
     val playlists = playlists.items?.map { playlist ->
         try {
-            TrackDataEntity(
+            HomeFeedData(
                 id = playlist.id,
+                type = FeedType.Playlist,
                 url = playlist.images.first().url,
-                title = playlist.name,
+                header = playlist.name,
                 subtitle = playlist.description,
-                previewUrl = ""
             )
         } catch (e: Exception) {
             Log.d("toSearchEntity album failure", e.toString())
@@ -75,7 +62,6 @@ fun SearchResponse.toSearchEntity(): SearchEntity {
 
     return SearchEntity(
         tracks = tracks.filterNotNull(),
-        artists = artists.filterNotNull(),
         albums = albums.filterNotNull(),
         playlists = playlists.filterNotNull()
     )

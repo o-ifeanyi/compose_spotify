@@ -6,5 +6,6 @@ enum class AppScreens {
     SearchScreen,
     SubscriptionScreen,
     DetailScreen,
-    CategoryPlaylistScreen
+    CategoryPlaylistScreen,
+    NowPlayingScreen,
 }

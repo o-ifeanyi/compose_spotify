@@ -1,5 +1,6 @@
 package com.example.composespotify.app.presentation.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,10 +20,11 @@ import androidx.compose.ui.unit.dp
 fun TrackComponent(
     title: String,
     subtitle: String,
-    imageUrl: String?
+    imageUrl: String?,
+    onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.height(70.dp),
+        modifier = Modifier.height(70.dp).clickable { onClick.invoke() },
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

@@ -2,8 +2,6 @@ package com.example.composespotify.app.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -11,28 +9,21 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.composespotify.app.domain.entity.FeedType
+import com.example.composespotify.app.presentation.viewmodel.PlayerViewModel
 import com.example.composespotify.app.presentation.viewmodel.SearchViewModel
 import com.example.composespotify.core.navigation.AppScreens
 
 enum class SearchTabs {
-    Artist,
     Songs,
     Playlist,
     Albums,
@@ -41,11 +32,12 @@ enum class SearchTabs {
 @Composable
 fun SearchResultComponent(
     controller: NavHostController,
-    searchViewModel: SearchViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel = hiltViewModel(),
+    playerViewModel: PlayerViewModel = PlayerViewModel,
 ) {
     val state = searchViewModel.searchState.collectAsState().value
     val selectedTab = remember {
-        mutableStateOf(SearchTabs.Artist)
+        mutableStateOf(SearchTabs.Songs)
     }
 
     if (state.searching) {
@@ -69,34 +61,6 @@ fun SearchResultComponent(
                 }
             }
             when (selectedTab.value) {
-                SearchTabs.Artist -> LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(15.dp)
-                ) {
-                    items(searchEntity.artists) { item ->
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            ImageComponent(
-                                url = item.url,
-                                width = 60.dp,
-                                height = 60.dp,
-                                shape = RoundedCornerShape(50)
-                            )
-                            Text(
-                                text = item.title,
-                                fontWeight = FontWeight.SemiBold,
-                                maxLines = 1
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            Icon(
-                                imageVector = Icons.Rounded.ArrowForwardIos,
-                                contentDescription = "Open Artist"
-                            )
-                        }
-                    }
-                }
-
                 SearchTabs.Songs -> LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
@@ -105,7 +69,11 @@ fun SearchResultComponent(
                             title = item.title,
                             subtitle = item.subtitle,
                             imageUrl = item.url
-                        )
+                        ) {
+                            playerViewModel.setQueue(searchEntity.tracks)
+                            playerViewModel.play(item)
+                            controller.navigate(AppScreens.NowPlayingScreen.name)
+                        }
                     }
                 }
 
@@ -116,10 +84,10 @@ fun SearchResultComponent(
                 ) {
                     items(searchEntity.playlists) { item ->
                         PlaylistAlbumComponent(
-                            title = item.title,
+                            title = item.header,
                             imageUrl = item.url
                         ) {
-                            controller.navigate(AppScreens.DetailScreen.name + "/${item.id}/${FeedType.Playlist.name}")
+                            controller.navigate(AppScreens.DetailScreen.name + "/${item.id}/${item.type.name}")
                         }
                     }
                 }
@@ -131,10 +99,10 @@ fun SearchResultComponent(
                 ) {
                     items(searchEntity.albums) { item ->
                         PlaylistAlbumComponent(
-                            title = item.title,
+                            title = item.header,
                             imageUrl = item.url
                         ) {
-                            controller.navigate(AppScreens.DetailScreen.name + "/${item.id}/${FeedType.Album.name}")
+                            controller.navigate(AppScreens.DetailScreen.name + "/${item.id}/${item.type.name}")
                         }
                     }
                 }

@@ -33,5 +33,8 @@ fun AppNavigation(controller: NavHostController) {
             val title = it.arguments?.getString("title")
             CategoryPlaylistScreen(controller = controller, id = id ?: "", title = title ?: "")
         }
+        composable(AppScreens.NowPlayingScreen.name) {
+            NowPlayingScreen()
+        }
     }
 }
