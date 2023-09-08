@@ -19,13 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.composespotify.R
-import com.example.composespotify.core.component.SnackBarComponent
 import com.example.composespotify.core.util.Config
 import com.example.composespotify.app.presentation.component.ImageComponent
 import com.example.composespotify.app.presentation.component.TrackComponent
 import com.example.composespotify.app.presentation.viewmodel.DetailViewModel
 import com.example.composespotify.app.presentation.viewmodel.PlayerViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,22 +38,6 @@ fun DetailScreen(
     val isPlaylist = type == "Playlist"
     val isAlbum = type == "Album"
 
-    val scope = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
-
-    LaunchedEffect(key1 = state.gettingAlbumErr, key2 = state.gettingPlaylistErr) {
-        if (state.gettingAlbumErr.isNotEmpty()) {
-            scope.launch {
-                snackBarHostState.showSnackbar(message = state.gettingAlbumErr)
-            }
-        }
-        if (state.gettingPlaylistErr.isNotEmpty()) {
-            scope.launch {
-                snackBarHostState.showSnackbar(message = state.gettingPlaylistErr)
-            }
-        }
-    }
-
     LaunchedEffect(key1 = Unit) {
         if (isAlbum) {
             detailViewModel.fetchAlbum(id)
@@ -65,7 +47,6 @@ fun DetailScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackBarComponent(hostState = snackBarHostState, isError = true) },
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -81,10 +62,9 @@ fun DetailScreen(
     ) {
         if ((isPlaylist && state.gettingPlaylist) || (isAlbum && state.gettingAlbum)) {
             CircularProgressIndicator()
-        } else if (state.gettingAlbumErr.isNotEmpty() || state.gettingPlaylistErr.isNotEmpty()) {
-            Text(text = "An error occurred")
-        } else {
-            val detailEntity = state.detailEntity!!
+        } else if (state.detailEntity != null) {
+
+            val detailEntity = state.detailEntity
 
             LazyColumn(
                 modifier = Modifier

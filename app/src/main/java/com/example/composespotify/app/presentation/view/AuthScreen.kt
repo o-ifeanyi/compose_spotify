@@ -12,31 +12,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.composespotify.core.navigation.AppScreens
 import com.example.composespotify.core.component.LogoComponent
-import com.example.composespotify.core.component.SnackBarComponent
 import com.example.composespotify.app.presentation.viewmodel.AuthViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun AuthScreen(controller: NavHostController, viewModel: AuthViewModel = hiltViewModel()) {
     val state = viewModel.authState.collectAsState().value
-    val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(key1 = state.tokenIsValid, key2 = state.gettingTokenErr) {
+    LaunchedEffect(key1 = state.tokenIsValid) {
         if (state.tokenIsValid) controller.navigate(AppScreens.HomeScreen.name) {
             popUpTo(AppScreens.AuthScreen.name) { inclusive = true }
         }
-        if (state.gettingTokenErr.isNotEmpty()) {
-            scope.launch {
-                snackBarHostState.showSnackbar(message = state.gettingTokenErr)
-            }
-        }
-        viewModel.validateToken()
     }
 
-    Scaffold(
-        snackbarHost = { SnackBarComponent(snackBarHostState) }
-    ) {
+    Scaffold {
         Column(
             modifier = Modifier
                 .fillMaxSize()

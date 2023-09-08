@@ -14,37 +14,22 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.composespotify.core.navigation.AppScreens
-import com.example.composespotify.core.theme.ComposeSpotifyTheme
 import com.example.composespotify.app.presentation.component.CategoryComponent
 import com.example.composespotify.app.presentation.component.PillComponent
 import com.example.composespotify.app.presentation.component.RecentComponent
-import com.example.composespotify.core.component.SnackBarComponent
 import com.example.composespotify.app.presentation.viewmodel.HomeViewModel
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(controller: NavHostController, homeViewModel: HomeViewModel = hiltViewModel()) {
     val state = homeViewModel.homeState.collectAsState().value
-    val scope = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = state.fetchingHomeFeedErr) {
-        if (state.fetchingHomeFeedErr.isNotEmpty()) {
-            scope.launch {
-                snackBarHostState.showSnackbar(message = state.fetchingHomeFeedErr)
-            }
-        }
-    }
 
     Scaffold(
-        snackbarHost = { SnackBarComponent(hostState = snackBarHostState, isError = true) },
         topBar = {
             LargeTopAppBar(
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -76,13 +61,13 @@ fun HomeScreen(controller: NavHostController, homeViewModel: HomeViewModel = hil
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Outlined.Settings,
-                            contentDescription = "Notification"
+                            contentDescription = "Settings"
                         )
                     }
                 }
             )
         },
-    ) { it ->
+    ) {
         LazyColumn(
             modifier = Modifier
                 .padding(
@@ -117,14 +102,5 @@ fun HomeScreen(controller: NavHostController, homeViewModel: HomeViewModel = hil
                 )
             }
         }
-    }
-}
-
-
-@Preview
-@Composable
-fun Previeww() {
-    ComposeSpotifyTheme(darkTheme = true) {
-        HomeScreen(controller = NavHostController(LocalContext.current))
     }
 }

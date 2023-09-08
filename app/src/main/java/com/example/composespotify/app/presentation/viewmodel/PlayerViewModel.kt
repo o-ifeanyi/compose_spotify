@@ -4,6 +4,7 @@ import android.media.MediaPlayer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composespotify.app.domain.entity.TrackDataEntity
+import com.example.composespotify.core.service.SnackBarService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,6 +48,7 @@ object PlayerViewModel : ViewModel()  {
             viewModelScope.launch { listen() }
         } catch (e: Exception) {
             e.printStackTrace()
+            SnackBarService.displayMessage("An error occurred while playing track")
         }
     }
 

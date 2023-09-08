@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.composespotify.core.resource.Resource
 import com.example.composespotify.core.service.DataStoreService
 import com.example.composespotify.app.domain.repository.AuthRepository
+import com.example.composespotify.core.service.SnackBarService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +17,6 @@ import javax.inject.Inject
 data class AuthState(
     val gettingToken: Boolean = false,
     val tokenIsValid: Boolean = false,
-    val gettingTokenErr: String = ""
 )
 
 @HiltViewModel
@@ -27,7 +27,9 @@ class AuthViewModel @Inject constructor(
     private val _authState = MutableStateFlow(AuthState())
     val authState = _authState.asStateFlow()
 
-    fun validateToken() {
+    init { validateToken() }
+
+    private fun validateToken() {
         viewModelScope.launch {
             val tokenExp = dataStoreService.getTokenExp()
             if (tokenExp == null) {
@@ -43,15 +45,12 @@ class AuthViewModel @Inject constructor(
     }
 
     fun getAndSetToken() {
-        _authState.update { it.copy(gettingToken = true, gettingTokenErr = "") }
+        _authState.update { it.copy(gettingToken = true) }
         viewModelScope.launch {
             when (val res = authRepository.getAndSetToken()) {
-                is Resource.Error -> _authState.update {
-                    it.copy(gettingTokenErr = res.message!!)
-                }
-                else -> {}
+                is Resource.Error -> SnackBarService.displayMessage(res.message!!)
+                is Resource.Success -> { validateToken() }
             }
-            validateToken()
             _authState.update { it.copy(gettingToken = false) }
         }
     }

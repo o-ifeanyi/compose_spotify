@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -42,10 +41,9 @@ fun SearchResultComponent(
 
     if (state.searching) {
         CircularProgressIndicator()
-    } else if (state.searchingErr.isNotEmpty()) {
-        Text(text = "An error occurred")
-    } else {
-        val searchEntity = state.searchEntity!!
+    } else if (state.searchEntity != null) {
+
+        val searchEntity = state.searchEntity
         Column(
             verticalArrangement = Arrangement.spacedBy(15.dp),
             modifier = Modifier.fillMaxSize()

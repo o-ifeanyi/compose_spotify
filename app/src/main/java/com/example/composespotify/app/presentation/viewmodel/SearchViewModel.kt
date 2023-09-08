@@ -13,6 +13,7 @@ import com.example.composespotify.app.data.model.PlaylistModel
 import com.example.composespotify.app.data.response.toSearchEntity
 import com.example.composespotify.app.domain.entity.SearchEntity
 import com.example.composespotify.app.domain.repository.SearchRepository
+import com.example.composespotify.core.service.SnackBarService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -21,13 +22,13 @@ import javax.inject.Inject
 
 data class SearchState(
     val searching: Boolean = true,
-    val searchingErr: String = "",
     val searchEntity: SearchEntity? = null
 )
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository): ViewModel() {
+class SearchViewModel @Inject constructor(private val searchRepository: SearchRepository) :
+    ViewModel() {
     private val _searchState = MutableStateFlow(SearchState())
     val searchState = _searchState.asStateFlow()
 
@@ -38,15 +39,11 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
             searchText.asStateFlow().debounce(1000).collect { query ->
                 Log.d("SEARCH QUERY", query)
                 if (query.isEmpty()) return@collect
-                _searchState.update { it.copy(searching = true, searchingErr = "") }
+                _searchState.update { it.copy(searching = true) }
                 viewModelScope.launch {
-                    when(val res = searchRepository.search(query, 0, 20)) {
-                        is Resource.Success -> {
-                            _searchState.update { it.copy(searchEntity = res.data?.toSearchEntity()) }
-                        }
-                        is Resource.Error -> {
-                            _searchState.update { it.copy(searchingErr = res.message!!) }
-                        }
+                    when (val res = searchRepository.search(query, 0, 20)) {
+                        is Resource.Success -> _searchState.update { it.copy(searchEntity = res.data?.toSearchEntity()) }
+                        is Resource.Error -> SnackBarService.displayMessage(res.message!!)
                     }
                     _searchState.update { it.copy(searching = false) }
                 }
@@ -54,18 +51,20 @@ class SearchViewModel @Inject constructor(private val searchRepository: SearchRe
         }
     }
 
-    val categories = Pager(initialKey = 0 ,config = PagingConfig(initialLoadSize = 20, pageSize = 20)) {
-        PagingResource {
-            searchRepository.getCategories(it, 20)
-        }
-    }.flow.cachedIn(viewModelScope)
-
-    fun getCategoryPlaylist(id: String): Flow<PagingData<PlaylistModel>> {
-        val categoryPlaylist = Pager(initialKey = 0 ,config = PagingConfig(initialLoadSize = 20, pageSize = 20)) {
+    val categories =
+        Pager(initialKey = 0, config = PagingConfig(initialLoadSize = 20, pageSize = 20)) {
             PagingResource {
-                searchRepository.getCategoryPlaylist(id, it, 20)
+                searchRepository.getCategories(it, 20)
             }
         }.flow.cachedIn(viewModelScope)
+
+    fun getCategoryPlaylist(id: String): Flow<PagingData<PlaylistModel>> {
+        val categoryPlaylist =
+            Pager(initialKey = 0, config = PagingConfig(initialLoadSize = 20, pageSize = 20)) {
+                PagingResource {
+                    searchRepository.getCategoryPlaylist(id, it, 20)
+                }
+            }.flow.cachedIn(viewModelScope)
 
         return categoryPlaylist
     }
